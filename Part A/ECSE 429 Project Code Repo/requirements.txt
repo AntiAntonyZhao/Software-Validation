@@ -1,0 +1,5 @@
+pytest-random-order
+pytest
+requests
+xmltodict
+dicttoxml

@@ -1,0 +1,9 @@
+.dist
+.pytest_cache
+__pycache__/
+.vscode
+.idea/
+*.pyc
+*.txt
+.mypy_cache/
+PerformanceC/

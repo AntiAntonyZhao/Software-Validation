@@ -1,0 +1,161 @@
+CHARTER
+-----------------------------------------------
+Identify capabilities and areas of potential instability of the “rest api todo list manager”
+
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+
+Area
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilities
+
+
+Environment
+-----------------------------------------------
+Windows 11
+Screen resolution: 2560 x 1600
+
+
+START
+-----------------------------------------------
+5:00 PM Oct 19, 2023
+
+Other Data
+-----------------------------------------------
+
+
+TESTER
+-----------------------------------------------
+Ziyue Wang (260951986)
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes
+
+
+TEST NOTES
+ALL the tests will be done with XML format for this session
+-----------------------------------------------
+5:00 Booted up application
+
+/projects
+5:02 GET /projects: get 1 project object with "id", "title", "completed", "active", "description" and "tasks". Status code: 200
+5:06 HEAD /projects: nothing happened. Status code: 200
+5:25 POST /projects: {title: "Post new object"}: new object with the ascending id(2) and title(Post new object) has been created. Status code: 201
+
+/projects/:id
+5:02 GET /projects/1: get the information of the project object with id=1. Status code: 200
+5:06 HEAD /projects/1: nothing happened. Status code: 200
+Post successful (working as put)
+5:19 POST /projects/1: {title: "Post new title 1"}: updated the title of the project (with id: 1). Status code: 200
+Post failed (unable to create new object using post)
+5:22 POST /projects/3: {title: "title3", description: "Trying to create project3 using POST"}: Error messages(No such project entity instance with GUID or ID 3 found). Status code: 404
+5:13 PUT /projects/1: {title: "Projects new title 1", completed: true, active: true}: updated the title, completed and active status of the project (with id: 1). Status code: 200
+5:16 PUT /projects/10: {title: ""New project 10"}: Error messages(Invalid GUID for 10 entity project). Status code: 404
+5:31 DELETE /projects/2: nothing happened on screen, but after rerunning GET /projects, the new object created by POST (id:2) has been deleted. Status code: 200
+
+<Undocumented tests>
+Put failed (input invalid)
+5:10 PUT /projects: nothing happened. Status code: 405 (Method Not Allowed)
+5:28 DELETE /projects: nothing happened. Status code: 405 (Method Not Allowed)
+
+5: 30 Get /projects/1/categories: server returned empty list of categories  Status code: 200 (task 1 is of category 1)
+5: 31 Head /projects/1/categories: server return headers Date, Content-Type. Transfer-Encoding and Server
+5:33 Get /projects/100/categories: server returned empty list of categories Status code: 200 (project 100 doesn’t exists, should return 404)
+
+5:35 POST /projects/1/categories: Body is{id:2, title:Home, description:}  Server returned no content, Status code: 201
+
+5:36 Get /projects/1/categories: Server returned List of Categories with one body:
+	{
+		"id": "2",
+            		"title": "Home",
+            		"description": "
+}
+Status code: 200 \
+
+5:37 POST /projects/1/categories: Body is{id:3, title:Home, description:} Server returned error message "Could not find thing matching value for id" Status code: 404
+
+5:40  Delete /projects/1/categories/1: Server returned no content Status code: 200
+
+5:42 Get /projects/1/categories: server returned empty list of categories  Status code: 200 
+
+
+5:43 Get /projects/1/tasks:  Server returned content:
+{
+    "todos": [
+        {
+            "id": "1",
+            "title": "scan paperwork",
+            "doneStatus": "false",
+            "description": "",
+            "tasksof": [
+                {
+                    "id": "1"
+                }
+            ],
+            "categories": [
+                {
+                    "id": "1"
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "title": "file paperwork",
+            "doneStatus": "false",
+            "description": "",
+            "tasksof": [
+                {
+                    "id": "1"
+                }
+            ]
+        }
+    ]
+}
+
+ Status code: 200 
+
+5:44 Head /projects/1/tasks:  Server returned headers: Date, Content-Type. Transfer-Encoding, Server
+
+5:45 Delete /projects/1/tasks/2 : Server returned no content. Status Code: 200
+
+
+5:45 Post  /projects/1/tasks: Body is:
+{
+            "id": "2",
+            "title": "file paperwork",
+            "doneStatus": "false",
+            "description": ""
+        }
+ Server returned no content. Status Code: 201
+
+5：46 Post  /projects/2/tasks: Body is:
+{
+            "id": "2",
+            "title": "file paperwork",
+            "doneStatus": "false",
+            "description": ""
+        }
+Server returned error message "Could not find parent thing for relationship projects/2/tasks" Status Code: 404
+
+5：50 Get /projects/0/tasks: server returned list of todos.  Status code: 200 (project 0 doesn;t exists, should be 404)
+
+5:51 Post /projects/0/tasks: using same body of todo 2
+
+5:52 Delete /projects/0/categories: Server returned no content, StatusCode:405
+
+5:53 Get /projects/0/categories: Server returned Category 1, StatusCode: 200 (project 0 doesnt exists, should return not found message with code 404)
+
+Docs
+5:54 GET /docs: The server returned the API Documentation. Status code: 200
+
+Shutdown
+5:56 GET /shutdown: The server has been shut down, and the monitor shows "Could not get response" with error(read ECONNRESET).
+
+
+----------------- session end ----------------------------------------

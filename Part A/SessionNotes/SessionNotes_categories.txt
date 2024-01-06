@@ -1,0 +1,95 @@
+CHARTER
+-----------------------------------------------
+Identify capabilities and areas of potential instability of the “rest api todo list manager”
+
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+
+Area
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilities
+
+
+Environment
+-----------------------------------------------
+Windows 11
+Screen resolution: 2560 x 1600
+
+
+START
+-----------------------------------------------
+6:00 PM Oct 19, 2023
+
+Other Data
+-----------------------------------------------
+
+
+TESTER
+-----------------------------------------------
+Antony Zhao(260944810)
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes (actually 50 minutes)
+
+
+TEST NOTES
+ALL the tests will be done with XML format for this session
+-----------------------------------------------
+5:58 Booted up application
+
+/categories
+6:01 GET /categories: get 2 category objects with "id", "title" and "description". Status code: 200
+6:02 HEAD /categories: nothing happened. Status code: 200
+6:03 POST /categories: {title: "Post new object"}: new object with the ascending id(3) and title(Post new object) has been created. Status code: 201
+
+/categories/:id
+6:04 GET /categories/1: get the information of the category object with id=1. Status code: 200
+6:05 GET /categories/6: error Message(Could not find an instance with categories/6). Status code: 404
+6:06 HEAD /categories/1: nothing happened. Status code: 200
+6:08 POST /categories/1: {title: "Post new title 1"}: updated the title of the category (with id: 1). Status code: 200
+6:10 POST /categories/3: {title: "title3", description: "Trying to create category3 using POST"}: Error messages(No such project entity instance with GUID or ID 3 found). Status code: 404
+6:11 PUT /categories/1: {title: "Categories new title 1"}: updated the title of the category (with id: 1). Status code: 200
+6:12 PUT /categories/10: {title: ""New category 10"}: Error messages(Invalid GUID for 10 entity category). Status code: 404
+6:13 DELETE /categories/3: nothing happened on screen, but after rerunning GET /categories, the new object created by POST (id:3) has been deleted. Status code: 200
+6:14 DELETE /categories/4: error Message(Could not find any instances with categories/4). Status code: 404
+
+/categories/:id/todos
+6:15 GET /categories/1/todos: get the nothing(EMPTY) of the todos objects under the category object with id=1. Status code: 200
+6:17 GET /categories/6/todos: get nothing(EMPTY) of the todos objects under the category object with id=6. Status code: 200. See image category_6_17.
+6:18 HEAD /categories/1/todos: nothing happened. Status code: 200
+6:21 POST /categories/1/todos: {title: "new todo"}: a new todo object with id=3 and title = “new todo” has been created. (Note: there is no todo object, but no.3 has been created. id=1 and 2 has been escaped) Status code: 201. See image category_6_21 and category_6_21_GET
+6:22 POST /categories/6/todos: {title: "new todo"}: error message(Could not find parent thing for relationship categories/6/todos). Status code: 404
+6:23 DELETE /categories/1/todos/3: nothing happened on screen, but after rerunning “GET /categories/1/todos”, the new todo object created by POST (id:3) has been deleted. Status code: 200
+6:24 DELETE /categories/6/todos/3: error message(Could not find any instances with categories/6/todos/3). Status code: 404
+
+/categories/:id/projects
+6:25 GET /categories/1/projects: get the information(EMPTY) of the projects objects under the category object with id=1. Status code: 200
+6:27 GET /categories/6/projects: get nothing(EMPTY) of the todos objects under the category object with id=6. Status code: 200. See image category_6_27.
+6:28 HEAD /categories/1/projects: nothing happened. Status code: 200
+6:31 POST /categories/1/projects: {title: "new project"}: a new project object with id=2 and title = “new project” has been created. (Note: there is no project object before, but no.2 has been created. id=1 has been escaped) Status code: 201. See image category_6_31 and category_6_31_GET.
+6:32 POST /categories/6/projects: {title: "new project"}: error message(Could not find parent thing for relationship categories/6/projects). Status code: 404
+6:33 DELETE /categories/1/projects/3: nothing happened on screen, but after rerunning “GET /categories/1/projects”, the new project object created by POST (id:3) has been deleted. Status code: 200
+6:34 DELETE /categories/6/projects/3: error message(Could not find any instances with categories/6/projects/3). Status code: 404
+
+<Undocumented tests>
+6:35 PUT /categories: nothing happened. Status code: 405 (Method Not Allowed)
+6:37 DELETE /categories: nothing happened. Status code: 405 (Method Not Allowed)
+6:39 PUT /categories/1/todos: 405 Method not allowed. StatusCode 405
+6:41 PUT /categories/1/projects: 405 Method not allowed. StatusCode 405
+6:43 DELETE /categories/1/todos: nothing happened. Status code: 405 (Method Not Allowed)
+6:45 DELETE /categories/1/projects: nothing happened. Status code: 405 (Method Not Allowed)
+
+Docs
+6:46 GET /docs: The server returned the API Documentation. Status code: 200
+
+Shutdown
+6:48 GET /shutdown: The server has been shut down, and the monitor shows "Could not get response" with error(read ECONNRESET).
+
+
+----------------- session end ----------------------------------------

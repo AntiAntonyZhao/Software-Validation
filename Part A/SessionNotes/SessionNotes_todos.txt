@@ -1,0 +1,99 @@
+CHARTER
+-----------------------------------------------
+Identify capabilities and areas of potential instability of the “rest api todo list manager”
+
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+
+Area
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilities
+
+
+Environment
+-----------------------------------------------
+Windows 11
+Screen resolution: 2560 x 1600
+
+
+START
+-----------------------------------------------
+5:00 PM Oct 19, 2023
+
+Other Data
+-----------------------------------------------
+
+
+TESTER
+-----------------------------------------------
+Peter Yu (261005015)
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes (Actually 53 mins)
+
+
+TEST NOTES
+ALL the tests will be done with XML format for this session
+-----------------------------------------------
+3:00 Booted up application
+/todos
+3:01 GET /todos: get 2 todo objects with "id", "title", "doneStatus", "description" and "tasksof". Status code: 200
+3:02 HEAD /todos: nothing happened. Status code: 200
+3:03 POST /todos: {title: "Post new object"}: new object with the ascending id(3) and title(Post new object) has been created. Status code: 201
+
+/todos/:id
+3:05 GET /todos/1: get the information of the todo object with id=1. Status code: 200
+3:07 GET /todos/6: error message(Could not find an instance with todos/6). Status code: 404
+3:08 HEAD /todos/1: nothing happened. Status code: 200
+Post successful (working as put)
+3:10 POST /todos/1: {title: "Post new title 1"}: updated the title of the todo (with id: 1). Status code: 200
+3:12 POST /todos/3: {title: "title3", description: "Trying to create todo3 using POST"}: Error messages(No such project entity instance with GUID or ID 3 found). Status code: 404
+3:14 PUT /todos/1: {title: "Todos new title 1", doneStatus: true}: updated the title and the done Status of the todo (with id: 1). Status code: 200
+3:16 PUT /todos/10: {title: ""New todo 10"}: Error messages(Invalid GUID for 10 entity todo). Status code: 404
+3:17 DELETE /todos/3: nothing happened on screen, but after rerunning GET /todos, the new object created by POST (id:3) has been deleted. Status code: 200
+3:18 DELETE /todos/6: error message(Could not find any instances with todos/6). Status code: 404
+
+/todos/:id/tasksof
+3:19 GET /todos/1/tasksof: get a taskof object under the todo object with id=1. Status code: 200
+3:22 GET /todos/6/tasksof: get 2 taskof objects with the same id (id=1)the todo object with id=6. Status code: 200 (However, there should not be todo object with id = 6, so it should be 404) # BUG on edge cases. See image todo_3_22.
+3:23 HEAD /todos/1/tasksof: nothing happened. Status code: 200
+3:25 POST /todos/1/tasksof: {title: "new taskof"}: a new taskof object with id=2 and title = “new taskof” has been created. Status code: 201
+3:26 POST /todos/6/tasksof: {title: "new taskof"}: error message(Could not find parent thing for relationship todos/6/tasksof). Status code: 404
+3:27 DELETE /todos/1/tasksof/2: nothing happened on screen, but after rerunning “GET /todos/1/tasksof”, the new taskof object created by POST (id:2) has been deleted. Status code: 200
+3:28 DELETE /todos/1/tasksof/2: error message(Could not find any instances with todos/6/tasksof/2). Status code: 404
+
+/todos/:id/categories
+3:30 GET /todos/1/categories: get a single category object with id=1 and "office" for title. Status code: 200
+3:33 GET /todos/6/categories: get a single category object with id=1 and "office" for title. Status code: 200 (Note: the todo object with id=6 is not exist, so it should be 404). See image todo_3_33.
+3:34 HEAD /todos/1/categories: nothing happened. Status code: 200
+3:36 POST /todos/1/categories: {title: "new category"}: a new category object with id=3 and title = “new category” has been created. (Note: there is no No.2 category, but no.3 has been created. id=2 has been escaped) Status code: 201. See image todo_3_36 and todo_3_36_GET.
+3:37 POST /todos/6/categories: {title: "new category"}: error message(Could not find parent thing for relationship todos/6/categories). Status code: 404
+3:38 DELETE /todos/1/categories/3:  nothing happened on screen, but after rerunning “GET /todos/1/categories”, the new category object created by POST (id:3) has been deleted. Status code: 200
+3:39 DELETE /todos/6/categories/3: error message(Could not find any instances with todos/6/categories/3). Status code: 404
+
+<Undocumented tests>
+Put failed (input invalid)
+3:41 PUT /todos: nothing happened. Status code: 405 (Method Not Allowed)
+Delete failed (input invalid)
+3:43 PUT /todos/1/tasksof: nothing happened. Status code: 405 (Method Not Allowed)
+3:45 PUT /todos/1/categories: nothing happened. Status code: 405 (Method Not Allowed)
+3:47 DELETE /todos: nothing happened. Status code: 405 (Method Not Allowed)
+3:48 DELETE /todos/tasksof: nothing happened. Status code: 405 (Method Not Allowed)
+3:49 DELETE /todos/categories: nothing happened. Status code: 405 (Method Not Allowed)
+
+Docs
+3:51 GET /docs: The server returned the API Documentation. Status code: 200
+
+Shutdown
+3:53 GET /shutdown: The server has been shut down, and the monitor shows "Could not get response" with error(read ECONNRESET).
+
+
+
+----------------- session end ----------------------------------------
+
